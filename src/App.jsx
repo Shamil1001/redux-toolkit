@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import TodoList from './components/Todolist'
 import InputField from './components/InputField'
 import { useDispatch } from 'react-redux'
 import { addItem } from './store/todSlice'
+import { fetchTodos } from './store/todSlice'
 
 function App() {
   // const [todos, setTodos] = useState([])
@@ -14,6 +15,10 @@ function App() {
     dispatch(addItem(text))
     setText('')
   }
+
+  useEffect(()=>{
+    dispatch(fetchTodos())
+  }, [dispatch])
   
 
   return (

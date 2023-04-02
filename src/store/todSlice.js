@@ -1,4 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const fetchTodos=createAsyncThunk(
+    'todos/fetchTodos',
+    async function (){
+        const response = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+        return response.data
+    }
+
+    
+)
 
 const todoSlice=createSlice({
     name: 'todos',
@@ -25,6 +36,19 @@ const todoSlice=createSlice({
         handleCheck(state, action){
             const toggleTodo=state.todos.find(todo=> todo.id===action.payload.id)
             toggleTodo.completed=!toggleTodo.completed
+        }
+    },
+    extraReducers: {
+        [fetchTodos.pending]: (state, action)=>{
+            state.status='loading'
+            state.error=null
+        },
+        [fetchTodos.fulfilled]: (state,action)=>{
+            state.status='resolved'
+            state.todos=action.payload
+        },
+        [fetchTodos.rejected]: (state)=>{
+
         }
     }
 })
